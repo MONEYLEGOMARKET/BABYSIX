@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESTE - Servidor Funcionando!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .status {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .success {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        .info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .info p {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        a {
+            color: #4ade80;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ SERVIDOR FUNCIONANDO!</h1>
+        <div class="status success">🎉 SUCESSO!</div>
+        <p style="font-size: 1.5em;">Se você está vendo esta página, o servidor está rodando perfeitamente!</p>
+
+        <div class="info">
+            <p><strong>Servidor:</strong> Python HTTP Server</p>
+            <p><strong>Porta:</strong> 8080</p>
+            <p><strong>Status:</strong> <span class="success">ONLINE ✓</span></p>
+            <p><strong>Data/Hora:</strong> <span id="time"></span></p>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <h2>📊 Acessar Plataforma de Trading</h2>
+            <p style="font-size: 1.3em; margin: 20px 0;">
+                <a href="index.html">➜ Clique aqui para abrir a Plataforma de Trading</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('time').textContent = now.toLocaleString('pt-BR');
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
