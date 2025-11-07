@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLineChart Pro - Demo Trading Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/@klinecharts/pro@0.1.1/dist/klinecharts-pro.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .container-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .info-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-bar .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        #container {
+            width: 100%;
+            height: 700px;
+            background: #f8f9fa;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            #container {
+                height: 500px;
+            }
+
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📈 KLineChart Pro</h1>
+        <p>Professional Financial Charting Platform</p>
+    </div>
+
+    <div class="container-wrapper">
+        <div class="info-bar">
+            <div class="status">
+                <div class="status-dot"></div>
+                <span>Live Trading Data</span>
+            </div>
+            <div>
+                <strong>Symbol:</strong> BABA (Alibaba) | <strong>Interval:</strong> 15 minutes
+            </div>
+        </div>
+
+        <div id="container">
+            <div class="loading">⏳ Loading chart data...</div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>📊 Real-Time Data</h3>
+                <p>Live market data from Polygon.io API with automatic updates</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Customizable</h3>
+                <p>Multiple themes, indicators, and drawing tools available</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Responsive</h3>
+                <p>Works perfectly on desktop, tablet, and mobile devices</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ High Performance</h3>
+                <p>Smooth rendering with Canvas-based technology</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Built with ❤️ using KLineChart Pro | Apache License 2.0</p>
+        <p>Visit: <a href="https://pro.klinecharts.com" style="color: white;">pro.klinecharts.com</a></p>
+    </div>
+
+    <script type="module">
+        import * as kline from "https://cdn.skypack.dev/@klinecharts/pro";
+
+        try {
+            const chart = new kline.KLineChartPro({
+                container: document.getElementById('container'),
+                // Default symbol info - Alibaba Stock
+                symbol: {
+                    exchange: 'XNYS',
+                    market: 'stocks',
+                    name: 'Alibaba Group Holding Limited American Depositary Shares',
+                    shortName: 'BABA',
+                    ticker: 'BABA',
+                    priceCurrency: 'usd',
+                    type: 'ADRC',
+                },
+                // Default period - 15 minute intervals
+                period: {
+                    multiplier: 15,
+                    timespan: 'minute',
+                    text: '15m'
+                },
+                // Data source from Polygon.io
+                datafeed: new kline.DefaultDatafeed('IR3qS2VjZ7kIDgnlqKxSmCRHqyBaMh9q'),
+                // Additional options
+                styles: {
+                    grid: {
+                        show: true,
+                        horizontal: {
+                            show: true,
+                            color: '#e0e0e0'
+                        },
+                        vertical: {
+                            show: true,
+                            color: '#e0e0e0'
+                        }
+                    }
+                }
+            });
+
+            console.log('✅ KLineChart Pro initialized successfully!');
+
+            // Log chart instance to console for debugging
+            window.chartInstance = chart;
+
+        } catch (error) {
+            console.error('❌ Error initializing chart:', error);
+            document.getElementById('container').innerHTML = `
+                <div style="padding: 50px; text-align: center; color: #e74c3c;">
+                    <h2>⚠️ Error Loading Chart</h2>
+                    <p>${error.message}</p>
+                    <p>Please check the console for more details.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
