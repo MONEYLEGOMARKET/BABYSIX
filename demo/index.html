@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLineChart Pro - Demo Trading Platform</title>
-    <link href="https://cdn.jsdelivr.net/npm/@klinecharts/pro@0.1.1/dist/klinecharts-pro.min.css" rel="stylesheet">
+    <title>Trading Platform - KLineChart Pro</title>
+
+    <!-- KLineChart Pro CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@klinecharts/pro@0.1.1/dist/klinecharts-pro.min.css">
+
     <style>
         * {
             margin: 0;
@@ -13,248 +16,465 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0e27;
+            color: #fff;
             min-height: 100vh;
-            padding: 20px;
         }
 
         .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease-in;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
+            font-size: 2.5em;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .header p {
-            font-size: 1.2em;
+            font-size: 1.1em;
             opacity: 0.9;
         }
 
-        .container-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            animation: slideUp 0.8s ease-out;
-        }
-
-        .info-bar {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .market-info {
+            background: #1a1f3a;
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #667eea;
         }
 
-        .info-bar .status {
+        .market-info .item {
             display: flex;
             align-items: center;
             gap: 10px;
+            margin: 5px 0;
         }
 
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background: #4ade80;
+        .status-live {
+            width: 10px;
+            height: 10px;
+            background: #10b981;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
 
-        #container {
-            width: 100%;
-            height: 700px;
-            background: #f8f9fa;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
         }
 
-        .features {
+        .chart-container {
+            background: #fff;
+            margin: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        #kline_chart {
+            width: 100%;
+            height: 600px;
+        }
+
+        .controls {
+            background: #1a1f3a;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 12px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .controls label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .controls select, .controls button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 2px solid #667eea;
+            background: #0a0e27;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .controls select:hover, .controls button:hover {
+            background: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .info-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            padding: 30px;
-            background: #f8f9fa;
-        }
-
-        .feature-card {
-            background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            margin: 20px;
         }
 
-        .feature-card:hover {
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
         }
 
-        .feature-card h3 {
-            color: #667eea;
+        .card h3 {
+            font-size: 1.3em;
             margin-bottom: 10px;
+        }
+
+        .card p {
+            opacity: 0.9;
+            line-height: 1.6;
         }
 
         .loading {
             text-align: center;
-            padding: 50px;
+            padding: 100px 20px;
+            font-size: 1.5em;
             color: #667eea;
-            font-size: 1.2em;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .error {
+            background: #dc2626;
+            color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            text-align: center;
         }
 
         .footer {
             text-align: center;
-            color: white;
-            margin-top: 30px;
-            padding: 20px;
-            opacity: 0.9;
+            padding: 30px;
+            background: #1a1f3a;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
         }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
-            }
-
-            #container {
-                height: 500px;
-            }
-
-            .info-bar {
-                flex-direction: column;
-                gap: 10px;
-            }
+            .header h1 { font-size: 1.8em; }
+            #kline_chart { height: 400px; }
+            .market-info { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📈 KLineChart Pro</h1>
-        <p>Professional Financial Charting Platform</p>
+        <h1>💹 Plataforma de Trading Profissional</h1>
+        <p>Análise de Mercado em Tempo Real com KLineChart Pro</p>
     </div>
 
-    <div class="container-wrapper">
-        <div class="info-bar">
-            <div class="status">
-                <div class="status-dot"></div>
-                <span>Live Trading Data</span>
-            </div>
-            <div>
-                <strong>Symbol:</strong> BABA (Alibaba) | <strong>Interval:</strong> 15 minutes
-            </div>
+    <div class="market-info">
+        <div class="item">
+            <div class="status-live"></div>
+            <span><strong>Status:</strong> LIVE</span>
+        </div>
+        <div class="item">
+            <span><strong>Símbolo:</strong> <span id="current-symbol">BABA</span></span>
+        </div>
+        <div class="item">
+            <span><strong>Mercado:</strong> NYSE</span>
+        </div>
+        <div class="item">
+            <span><strong>Intervalo:</strong> <span id="current-interval">15min</span></span>
+        </div>
+        <div class="item">
+            <span><strong>Última atualização:</strong> <span id="last-update">--:--</span></span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div>
+            <label for="symbol-select">Ação:</label>
+            <select id="symbol-select">
+                <option value="BABA">BABA - Alibaba</option>
+                <option value="AAPL">AAPL - Apple</option>
+                <option value="GOOGL">GOOGL - Google</option>
+                <option value="MSFT">MSFT - Microsoft</option>
+                <option value="TSLA">TSLA - Tesla</option>
+                <option value="AMZN">AMZN - Amazon</option>
+            </select>
         </div>
 
-        <div id="container">
-            <div class="loading">⏳ Loading chart data...</div>
+        <div>
+            <label for="interval-select">Intervalo:</label>
+            <select id="interval-select">
+                <option value="1">1 min</option>
+                <option value="5">5 min</option>
+                <option value="15" selected>15 min</option>
+                <option value="30">30 min</option>
+                <option value="60">1 hora</option>
+            </select>
         </div>
 
-        <div class="features">
-            <div class="feature-card">
-                <h3>📊 Real-Time Data</h3>
-                <p>Live market data from Polygon.io API with automatic updates</p>
+        <button id="refresh-btn">🔄 Atualizar Dados</button>
+        <button id="fullscreen-btn">⛶ Tela Cheia</button>
+    </div>
+
+    <div class="chart-container">
+        <div id="kline_chart">
+            <div class="loading">
+                ⏳ Carregando gráfico e dados de mercado...<br>
+                <small>Conectando com API Polygon.io</small>
             </div>
-            <div class="feature-card">
-                <h3>🎨 Customizable</h3>
-                <p>Multiple themes, indicators, and drawing tools available</p>
-            </div>
-            <div class="feature-card">
-                <h3>📱 Responsive</h3>
-                <p>Works perfectly on desktop, tablet, and mobile devices</p>
-            </div>
-            <div class="feature-card">
-                <h3>⚡ High Performance</h3>
-                <p>Smooth rendering with Canvas-based technology</p>
-            </div>
+        </div>
+    </div>
+
+    <div class="info-cards">
+        <div class="card">
+            <h3>📊 Dados em Tempo Real</h3>
+            <p>Cotações atualizadas do mercado de ações via API Polygon.io com refresh automático</p>
+        </div>
+        <div class="card">
+            <h3>🎯 Análise Técnica</h3>
+            <p>Mais de 30 indicadores técnicos incluindo MA, MACD, RSI, Bollinger Bands e muito mais</p>
+        </div>
+        <div class="card">
+            <h3>✏️ Ferramentas de Desenho</h3>
+            <p>Fibonacci, linhas de tendência, canais, padrões gráficos e outras ferramentas profissionais</p>
+        </div>
+        <div class="card">
+            <h3>⚡ Alta Performance</h3>
+            <p>Renderização Canvas otimizada para performance suave mesmo com milhares de candles</p>
         </div>
     </div>
 
     <div class="footer">
-        <p>Built with ❤️ using KLineChart Pro | Apache License 2.0</p>
-        <p>Visit: <a href="https://pro.klinecharts.com" style="color: white;">pro.klinecharts.com</a></p>
+        <p><strong>Trading Platform</strong> | Desenvolvido com KLineChart Pro</p>
+        <p>Dados fornecidos por <a href="https://polygon.io" target="_blank">Polygon.io</a></p>
+        <p>Open Source | <a href="https://github.com/klinecharts/pro" target="_blank">GitHub</a></p>
     </div>
 
-    <script type="module">
-        import * as kline from "https://cdn.skypack.dev/@klinecharts/pro";
+    <!-- KLineCharts Core Library -->
+    <script src="https://cdn.jsdelivr.net/npm/klinecharts@9.8.9/dist/klinecharts.min.js"></script>
 
-        try {
-            const chart = new kline.KLineChartPro({
-                container: document.getElementById('container'),
-                // Default symbol info - Alibaba Stock
-                symbol: {
-                    exchange: 'XNYS',
-                    market: 'stocks',
-                    name: 'Alibaba Group Holding Limited American Depositary Shares',
-                    shortName: 'BABA',
-                    ticker: 'BABA',
-                    priceCurrency: 'usd',
-                    type: 'ADRC',
-                },
-                // Default period - 15 minute intervals
-                period: {
-                    multiplier: 15,
-                    timespan: 'minute',
-                    text: '15m'
-                },
-                // Data source from Polygon.io
-                datafeed: new kline.DefaultDatafeed('IR3qS2VjZ7kIDgnlqKxSmCRHqyBaMh9q'),
-                // Additional options
-                styles: {
-                    grid: {
-                        show: true,
-                        horizontal: {
+    <!-- KLineChart Pro Library -->
+    <script type="module">
+        // Import KLineChart Pro
+        import * as KLineChartPro from 'https://cdn.jsdelivr.net/npm/@klinecharts/pro@0.1.1/+esm';
+
+        console.log('🚀 Iniciando Trading Platform...');
+        console.log('📦 KLineChart Pro carregado:', KLineChartPro);
+
+        let chartInstance = null;
+        const API_KEY = 'IR3qS2VjZ7kIDgnlqKxSmCRHqyBaMh9q';
+
+        // Configuração dos símbolos
+        const symbolsConfig = {
+            'BABA': {
+                exchange: 'XNYS',
+                market: 'stocks',
+                name: 'Alibaba Group Holding Limited',
+                shortName: 'BABA',
+                ticker: 'BABA',
+                priceCurrency: 'usd',
+                type: 'ADRC'
+            },
+            'AAPL': {
+                exchange: 'XNAS',
+                market: 'stocks',
+                name: 'Apple Inc.',
+                shortName: 'AAPL',
+                ticker: 'AAPL',
+                priceCurrency: 'usd',
+                type: 'CS'
+            },
+            'GOOGL': {
+                exchange: 'XNAS',
+                market: 'stocks',
+                name: 'Alphabet Inc.',
+                shortName: 'GOOGL',
+                ticker: 'GOOGL',
+                priceCurrency: 'usd',
+                type: 'CS'
+            },
+            'MSFT': {
+                exchange: 'XNAS',
+                market: 'stocks',
+                name: 'Microsoft Corporation',
+                shortName: 'MSFT',
+                ticker: 'MSFT',
+                priceCurrency: 'usd',
+                type: 'CS'
+            },
+            'TSLA': {
+                exchange: 'XNAS',
+                market: 'stocks',
+                name: 'Tesla, Inc.',
+                shortName: 'TSLA',
+                ticker: 'TSLA',
+                priceCurrency: 'usd',
+                type: 'CS'
+            },
+            'AMZN': {
+                exchange: 'XNAS',
+                market: 'stocks',
+                name: 'Amazon.com, Inc.',
+                shortName: 'AMZN',
+                ticker: 'AMZN',
+                priceCurrency: 'usd',
+                type: 'CS'
+            }
+        };
+
+        // Função para atualizar o horário
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR');
+            document.getElementById('last-update').textContent = timeStr;
+        }
+
+        // Função para inicializar o gráfico
+        async function initChart(symbol = 'BABA', interval = 15) {
+            try {
+                console.log(`📈 Inicializando gráfico para ${symbol} - ${interval}min`);
+
+                const container = document.getElementById('kline_chart');
+                container.innerHTML = '<div class="loading">⏳ Carregando dados...</div>';
+
+                // Configuração do símbolo
+                const symbolConfig = symbolsConfig[symbol];
+
+                // Criar instância do KLineChart Pro
+                chartInstance = new KLineChartPro.KLineChartPro({
+                    container: container,
+                    symbol: symbolConfig,
+                    period: {
+                        multiplier: interval,
+                        timespan: 'minute',
+                        text: `${interval}m`
+                    },
+                    datafeed: new KLineChartPro.DefaultDatafeed(API_KEY),
+                    styles: {
+                        grid: {
                             show: true,
-                            color: '#e0e0e0'
+                            horizontal: {
+                                show: true,
+                                color: '#e5e7eb',
+                                style: 'dashed'
+                            },
+                            vertical: {
+                                show: true,
+                                color: '#e5e7eb',
+                                style: 'dashed'
+                            }
                         },
-                        vertical: {
-                            show: true,
-                            color: '#e0e0e0'
+                        candle: {
+                            type: 'candle_solid',
+                            bar: {
+                                upColor: '#26a69a',
+                                downColor: '#ef5350',
+                                noChangeColor: '#888888'
+                            },
+                            tooltip: {
+                                showRule: 'always',
+                                showType: 'standard',
+                                text: {
+                                    size: 12,
+                                    family: 'Helvetica Neue, Arial, sans-serif',
+                                    weight: 'normal',
+                                    color: '#76808F'
+                                }
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            console.log('✅ KLineChart Pro initialized successfully!');
+                // Atualizar UI
+                document.getElementById('current-symbol').textContent = symbol;
+                document.getElementById('current-interval').textContent = `${interval}min`;
+                updateTime();
 
-            // Log chart instance to console for debugging
-            window.chartInstance = chart;
+                // Expor globalmente para debug
+                window.chartInstance = chartInstance;
 
-        } catch (error) {
-            console.error('❌ Error initializing chart:', error);
-            document.getElementById('container').innerHTML = `
-                <div style="padding: 50px; text-align: center; color: #e74c3c;">
-                    <h2>⚠️ Error Loading Chart</h2>
-                    <p>${error.message}</p>
-                    <p>Please check the console for more details.</p>
-                </div>
-            `;
+                console.log('✅ Gráfico inicializado com sucesso!');
+                console.log('📊 Instância do gráfico disponível em: window.chartInstance');
+
+            } catch (error) {
+                console.error('❌ Erro ao inicializar gráfico:', error);
+                document.getElementById('kline_chart').innerHTML = `
+                    <div class="error">
+                        <h3>⚠️ Erro ao carregar gráfico</h3>
+                        <p>${error.message}</p>
+                        <p><small>Verifique o console (F12) para mais detalhes</small></p>
+                        <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; cursor: pointer;">
+                            🔄 Recarregar Página
+                        </button>
+                    </div>
+                `;
+            }
         }
+
+        // Event Listeners
+        document.getElementById('symbol-select').addEventListener('change', (e) => {
+            const symbol = e.target.value;
+            const interval = parseInt(document.getElementById('interval-select').value);
+            if (chartInstance) {
+                chartInstance.dispose();
+            }
+            initChart(symbol, interval);
+        });
+
+        document.getElementById('interval-select').addEventListener('change', (e) => {
+            const interval = parseInt(e.target.value);
+            const symbol = document.getElementById('symbol-select').value;
+            if (chartInstance) {
+                chartInstance.dispose();
+            }
+            initChart(symbol, interval);
+        });
+
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            const symbol = document.getElementById('symbol-select').value;
+            const interval = parseInt(document.getElementById('interval-select').value);
+            if (chartInstance) {
+                chartInstance.dispose();
+            }
+            initChart(symbol, interval);
+        });
+
+        document.getElementById('fullscreen-btn').addEventListener('click', () => {
+            const container = document.querySelector('.chart-container');
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            } else if (container.webkitRequestFullscreen) {
+                container.webkitRequestFullscreen();
+            } else if (container.msRequestFullscreen) {
+                container.msRequestFullscreen();
+            }
+        });
+
+        // Atualizar horário a cada segundo
+        setInterval(updateTime, 1000);
+
+        // Inicializar aplicação
+        console.log('🎯 Configurações carregadas, iniciando aplicação...');
+        initChart('BABA', 15);
+
     </script>
 </body>
 </html>
